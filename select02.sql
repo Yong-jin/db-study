@@ -170,3 +170,117 @@ SELECT
     TO_CHAR( ROUND(SYSDATE), 'YYYY-MM-DD HH24:MI:SS')
 FROM dual;
 
+
+SELECT
+    TO_CHAR(1234, '999999'),
+    TO_CHAR(1234, '099999'),
+    TO_CHAR(1234, '$99999'),
+    '$' || 1234,
+    TO_CHAR(1234, '99999.99'),
+    TO_CHAR(1234, '99,999')
+FROM dual;
+
+
+--문자 -> 날짜  TO_DATE
+SELECT      
+    TO_DATE('2024-06-02') + 3,
+    TO_DATE('2024/06/02') + 3,
+    TO_DATE('24/06/02') + 3,
+    TO_DATE('20240602') + 3,
+    LAST_DAY('2024-08-05'),
+    TO_DATE('24:06:02') + 3,
+    TO_CHAR(SYSDATE, 'YYYY/MM/DD'),
+    TO_DATE('2024-01-05', 'YYYY-MM-DD'),
+    TO_DATE('2024,01,05', 'YYYY,MM,DD'),
+    TO_DATE('12/10/20', 'MM/DD/YY')     --12년 10월 20일 -> 12월 10일 20년도
+FROM dual;
+
+
+
+--NVL
+
+select 
+    sal,
+    comm,
+    sal*12+comm,   --숫자*12 + null 
+    sal*12 + NVL(comm, 0)
+from emp;
+
+select 
+    sal*12+comm   --숫자*12 + null 
+from emp
+where comm IS NOT NULL
+UNION ALL
+select 
+    sal*12   --숫자*12 + null 
+from emp
+where comm IS NULL;
+
+
+
+SELECT
+    NVL(null, 10),
+    NVL2(123, '있다', '없다'),
+    NVL2(null, '있다', '널이다')
+FROM dual;
+
+--DECODE
+
+SELECT 
+    DECODE(10, 10, '같다', '다르다'),
+    DECODE(10, 20, '같다', '다르다'),
+    DECODE(10, 20, '같다'),  --DECODE(10, 20, '같다', null)
+    DECODE(10, 20, '같다', null),
+    DECODE(50, 30, '30이다', 40, '40이다', 50, '50이다', '아니다'),
+    DECODE(10, 30, '30이다', 40, '40이다', 50, '50이다', 60, '60이다', '아니다'),
+    DECODE(10, 30, '30이다', 40, '40이다', 50, '50이다', 60, '60이다', null),
+    DECODE(40, 30, '30이다', 40, '40이다', 50, '50이다', 60, '60이다')
+FROM dual;
+
+select 
+    deptno, name,
+    DECODE(deptno, 101, '컴퓨터공학', '다른학과'),
+    DECODE(deptno, 101, '컴퓨터공학', 'ETC'),
+    DECODE(deptno, 101, '컴퓨터공학'),
+    DECODE(deptno, 101, '컴퓨터공학', null)
+from professor;
+
+select 
+    deptno, name,
+    DECODE(deptno, 101, '컴퓨터공학', 102, '멀티미디어', 103, '소프트웨어', 'ETC') DNAME,
+    deptno
+from professor;
+
+-- 조건? 참:거짓       조건? 참:거짓      조건? 참: ( 조건? 참:거짓   )   
+
+
+--case
+
+--grade 학년
+--1 1학년 2 2학년 3 3학년 4 4학년
+select grade || '학년'
+from student;
+
+--1 저학년 2 저학년 3 고학년 4 고학년
+SELECT
+    grade,
+    DECODE(grade, 1, '저학년', 2, '저학년', 3, '고학년', 4, '고학년') 구분,
+    CASE grade
+        WHEN 1 THEN '저학년'
+        WHEN 2 THEN '저학년'
+        WHEN 3 THEN '고학년'
+        WHEN 4 THEN '고학년'
+    END AS "학년구분",
+    CASE
+        WHEN grade IN (1,2) THEN '저학년'
+        WHEN grade BETWEEN 3 AND 4 THEN '고학년'
+    END 학년구분
+FROM student;
+
+
+
+
+
+
+
+
